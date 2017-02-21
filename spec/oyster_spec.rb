@@ -1,9 +1,9 @@
 require 'oyster'
 
 describe Oystercard do
-  let(:entry_station) {double(:entry_station => nil)}
-  let(:exit_station) {double(:exit_station => nil)}
-  let(:journey) {double(:journey => [])}
+  let(:entry_station) {double(:entry_station)}
+  let(:exit_station) {double(:exit_station)}
+  #let(:journey) {double(:journey => [])}
   let(:balance)  { 0 }
   subject(:card) {described_class.new(balance)}
 
