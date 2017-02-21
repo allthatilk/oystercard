@@ -81,10 +81,6 @@ describe Oystercard do
         card.touch_in(entry_station)
       end
 
-      it "shows my journeys" do
-        expect(card.journeys).to respond_to(:keys)
-      end
-
       it "initially an empty list of journey" do
         expect(card.journeys).to be_empty
       end
