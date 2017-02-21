@@ -1,5 +1,5 @@
 source "https://rubygems.org"
 # ruby '2.2.3'
 #group :development, :test do
-#end
-gem 'rspec', group: :development, :test
+#endbundle
+gem 'rspec', :group =>[:development, :test]
