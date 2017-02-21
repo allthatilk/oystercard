@@ -1,6 +1,7 @@
 require 'oyster'
 
 describe Oystercard do
+  let(:entry_station) {double(:entry_station)}
   subject(:card) {described_class.new}
   # Write an RSpec test for the Oystercard class that will test that a freshly
   # initialized card has a balance of 0 by default, see it fail, then write an
@@ -36,12 +37,18 @@ describe Oystercard do
 
       it "allows the card to be touched-in" do
         card.top_up(5)
-        expect{ card.touch_in }.to change{ card.in_journey? }.to true
+        expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
       end
 
       it "raises an error unless the balance is £1" do
         message = "You do not have minimum balance to make this journey"
-        expect{card.touch_in}.to raise_error message
+        expect{card.touch_in(entry_station)}.to raise_error message
+      end
+
+      it "remembers where I strated journey from" do
+        card.top_up(5)
+        card.touch_in(entry_station)
+        expect(card.entry_station).to eq entry_station
       end
     end
 
@@ -49,7 +56,7 @@ describe Oystercard do
 
       before(:each) do
         card.top_up(5)
-        card.touch_in
+        card.touch_in(entry_station)
       end
 
       it "allows the card to be touched-out" do
@@ -58,6 +65,11 @@ describe Oystercard do
 
       it "deducting fare" do
         expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MIN_LIMIT
+      end
+
+      it "forgets the entry station on touch out" do
+        card.touch_out
+        expect(card.entry_station).to eq nil
       end
     end
   end
@@ -68,11 +80,11 @@ describe Oystercard do
         card.top_up(5)
       end
       it "returns true if the card is in a journey" do
-        expect{ card.touch_in }.to change{ card.in_journey? }.to true
+        expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
       end
 
       it "returns false if the card is not in a journey" do
-        card.touch_in
+        card.touch_in(entry_station)
         expect{ card.touch_out }.to change{ card.in_journey? }.to false
       end
     end
