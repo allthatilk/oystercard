@@ -50,7 +50,7 @@ RSpec.configure do |config|
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
 =begin
-  # This allows you to limit a spec run to individual examples or groups
+  # This allows you to MAX_LIMIT a spec run to individual examples or groups
   # you care about by tagging them with `:focus` metadata. When nothing
   # is tagged with `:focus`, all examples get run. RSpec also provides
   # aliases for `it`, `describe`, and `context` that include `:focus`
@@ -62,7 +62,7 @@ RSpec.configure do |config|
   # you configure your source control system to ignore this file.
   config.example_status_persistence_file_path = "spec/examples.txt"
 
-  # Limits the available syntax to the non-monkey patched syntax that is
+  # MAX_LIMITs the available syntax to the non-monkey patched syntax that is
   # recommended. For more details, see:
   #   - http://rspec.info/blog/2012/06/rspecs-new-expectation-syntax/
   #   - http://www.teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/

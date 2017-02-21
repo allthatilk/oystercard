@@ -1,6 +1,7 @@
 class Oystercard
 
-LIMIT = 90
+MAX_LIMIT = 90
+MIN_LIMIT = 1
 
   def initialize(balance = 0)
     @balance = balance
@@ -8,23 +9,20 @@ LIMIT = 90
   end
 
   def top_up(money)
-    message = "Maximum balance of £#{LIMIT} exceeded"
-    raise message if (balance + money > LIMIT )
+    message = "Maximum balance of £#{MAX_LIMIT} exceeded"
+    raise message if (balance + money > MAX_LIMIT )
     @balance += (money)
   end
 
-  def deduct(money)
-    @balance -= money
-  end
-
   def touch_in
-    raise "Card already in journey" if in_journey?
+    message = "You do not have minimum balance to make this journey"
+    raise message if balance < MIN_LIMIT
     @in_journey = true
   end
 
   def touch_out
-    raise "Card is not in a journey" unless in_journey?
     @in_journey = false
+    deduct(MIN_LIMIT)
   end
 
   def in_journey?
@@ -32,5 +30,11 @@ LIMIT = 90
   end
 
 attr_reader :balance
+
+private
+
+def deduct(money)
+  @balance -= money
+end
 
 end

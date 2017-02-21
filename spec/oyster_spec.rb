@@ -17,14 +17,14 @@ describe Oystercard do
         expect { card.top_up 5 }.to change{ card.balance }.by 5
       end
 
-      it "decreases the card balance" do
-        expect { card.deduct 5 }.to change{ card.balance }.by -5
-      end
+      # it "decreases the card balance" do
+      #   expect { card.deduct 5 }.to change{ card.balance }.by -5
+      # end
     end
 
-    context "balance limit" do
+    context "balance MAX_LIMIT" do
       it "checks that no more than £90 can be added" do
-        maximum_balance = Oystercard::LIMIT
+        maximum_balance = Oystercard::MAX_LIMIT
         message = "Maximum balance of £#{maximum_balance} exceeded"
         expect { card.top_up maximum_balance + 1 }.to raise_error message
       end
@@ -32,36 +32,41 @@ describe Oystercard do
   end
 
   describe "Touching in and out" do
-  # context "touch-in requires card to have a balance" do
-
-    before :each do
-      card.top_up(Oystercard::LIMIT)
-     end
-
     context "touching in" do
+
       it "allows the card to be touched-in" do
-        # expect(card.touch_in).to be true
+        card.top_up(5)
         expect{ card.touch_in }.to change{ card.in_journey? }.to true
       end
 
-      it "raises an error if the card is already in a journey" do
-        expect{ 2.times{card.touch_in} }.to raise_error("Card already in journey")
+      it "raises an error unless the balance is £1" do
+        message = "You do not have minimum balance to make this journey"
+        expect{card.touch_in}.to raise_error message
       end
     end
 
     context "touching out" do
-      it "allows the card to be touched-out" do
-        # expect(card.touch_out).to be false
-        expect{ card.touch_in }.to change{ card.in_journey? }.to true
+
+      before(:each) do
+        card.top_up(5)
+        card.touch_in
       end
 
-      it "raises an error if the card is not in a journey" do
-        expect{ 2.times{card.touch_out} }.to raise_error("Card is not in a journey")
+      it "allows the card to be touched-out" do
+        expect{ card.touch_out }.to change{ card.in_journey? }.to false
+      end
+
+      it "deducting fare" do
+        expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MIN_LIMIT
       end
     end
   end
 
     describe "journey state" do
+
+      before(:each) do
+        card.top_up(5)
+      end
       it "returns true if the card is in a journey" do
         expect{ card.touch_in }.to change{ card.in_journey? }.to true
       end
