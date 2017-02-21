@@ -4,10 +4,10 @@ attr_accessor :entry_station, :exit_station, :journeys
 MAX_LIMIT = 90
 MIN_LIMIT = 1
 
-  def initialize(balance = 0)
+  def initialize(balance = 0, entry_station = nil, exit_station = nil, journey = [])
     @balance = balance
-    @entry_station = nil
-    @exit_station = nil
+    @entry_station = entry_station
+    @exit_station = exit_station
     @journeys = []
   end
 
