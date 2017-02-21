@@ -1,12 +1,14 @@
 class Oystercard
 
-attr_accessor :entry_station
+attr_accessor :entry_station, :exit_station, :journeys
 MAX_LIMIT = 90
 MIN_LIMIT = 1
 
   def initialize(balance = 0)
     @balance = balance
     @entry_station = nil
+    @exit_station = nil
+    @journeys = Hash.new
   end
 
   def top_up(money)
@@ -21,9 +23,12 @@ MIN_LIMIT = 1
     self.entry_station = entry_station
   end
 
-  def touch_out
+  def touch_out(exit_station)
     deduct(MIN_LIMIT)
+    journeys[:entry_station] = entry_station
+    journeys[:exit_station]  = exit_station
     self.entry_station = nil
+    self.exit_station = nil
   end
 
   def in_journey?

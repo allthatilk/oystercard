@@ -2,6 +2,7 @@ require 'oyster'
 
 describe Oystercard do
   let(:entry_station) {double(:entry_station)}
+  let(:exit_station) {double(:exit_station)}
   subject(:card) {described_class.new}
   # Write an RSpec test for the Oystercard class that will test that a freshly
   # initialized card has a balance of 0 by default, see it fail, then write an
@@ -60,17 +61,39 @@ describe Oystercard do
       end
 
       it "allows the card to be touched-out" do
-        expect{ card.touch_out }.to change{ card.in_journey? }.to false
+        expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
       end
 
       it "deducting fare" do
-        expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MIN_LIMIT
+        expect{ card.touch_out(exit_station) }.to change{ card.balance }.by -Oystercard::MIN_LIMIT
       end
 
       it "forgets the entry station on touch out" do
-        card.touch_out
+        card.touch_out(exit_station)
         expect(card.entry_station).to eq nil
       end
+    end
+
+    context "Journeys" do
+      let(:journey) {{entry_station: entry_station, exit_station: exit_station}}
+      before(:each) do
+        card.top_up(5)
+        card.touch_in(entry_station)
+      end
+
+      it "shows my journeys" do
+        expect(card.journeys).to respond_to(:keys)
+      end
+
+      it "initially an empty list of journey" do
+        expect(card.journeys).to be_empty
+      end
+
+      it "creates a journey after each touch_in touch_out pair" do
+        card.touch_out(exit_station)
+        expect(card.journeys).to include journey
+      end
+
     end
   end
 
@@ -85,7 +108,7 @@ describe Oystercard do
 
       it "returns false if the card is not in a journey" do
         card.touch_in(entry_station)
-        expect{ card.touch_out }.to change{ card.in_journey? }.to false
+        expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
       end
     end
 
