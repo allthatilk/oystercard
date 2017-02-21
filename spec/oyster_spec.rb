@@ -29,6 +29,7 @@ describe Oystercard do
         expect { card.top_up maximum_balance + 1 }.to raise_error message
       end
     end
+  end
 
   describe "Touching in and out" do
   # context "touch-in requires card to have a balance" do
@@ -42,11 +43,13 @@ describe Oystercard do
         # expect(card.touch_in).to be true
         expect{ card.touch_in }.to change{ card.in_journey? }.to true
       end
-    context "touching out" do
+
       it "raises an error if the card is already in a journey" do
         expect{ 2.times{card.touch_in} }.to raise_error("Card already in journey")
       end
+    end
 
+    context "touching out" do
       it "allows the card to be touched-out" do
         # expect(card.touch_out).to be false
         expect{ card.touch_in }.to change{ card.in_journey? }.to true
@@ -56,11 +59,13 @@ describe Oystercard do
         expect{ 2.times{card.touch_out} }.to raise_error("Card is not in a journey")
       end
     end
+  end
 
-    context "journey state" do
+    describe "journey state" do
       it "returns true if the card is in a journey" do
         expect{ card.touch_in }.to change{ card.in_journey? }.to true
       end
+
       it "returns false if the card is not in a journey" do
         card.touch_in
         expect{ card.touch_out }.to change{ card.in_journey? }.to false
