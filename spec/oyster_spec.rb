@@ -28,14 +28,14 @@ describe Oystercard do
     end
   end
 
-  describe "Touching in" do
+  describe "Touching in and out" do
     let(:balance) { 5 }
     context "touching in" do
       it "allows the card to be touched-in" do
         expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
       end
 
-      it "remembers where I strated journey from" do
+      it "remembers where I started journey from" do
         card.touch_in(entry_station)
         expect(card.entry_station).to eq entry_station
       end
@@ -58,7 +58,7 @@ describe Oystercard do
         expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
       end
 
-      it "deducting fare" do
+      it "deducts fare from balance on touch out" do
         expect{ card.touch_out(exit_station) }.to change{ card.balance }.by -Oystercard::MIN_LIMIT
       end
 
@@ -67,34 +67,36 @@ describe Oystercard do
         expect(card.entry_station).to eq nil
       end
     end
-
-    context "Journeys" do
-      let(:journey) {{entry_station: entry_station, exit_station: exit_station}}
-      before(:each) do
-        card.touch_in(entry_station)
-      end
-
-      it "initially an empty list of journey" do
-        expect(card.journeys).to be_empty
-      end
-
-      it "creates a journey after each touch_in touch_out pair" do
-        card.touch_out(exit_station)
-        expect(card.journeys).to include journey
-      end
-    end
   end
 
-   describe "journey state" do
+  describe "Journeys" do
     let(:balance) { 5 }
 
-    it "returns true if the card is in a journey" do
-      expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
-    end
+    context "recording journeys" do
+      let(:journey) {{entry_station: entry_station, exit_station: exit_station}}
+      
+        before(:each) do
+          card.touch_in(entry_station)
+        end
+          it "initially an empty list of journey" do
+            expect(card.journeys).to be_empty
+          end
 
-    it "returns false if the card is not in a journey" do
-      card.touch_in(entry_station)
-      expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
+          it "creates a journey after each touch_in touch_out pair" do
+            card.touch_out(exit_station)
+            expect(card.journeys).to include journey
+          end
+        end
+
+     context "journey state" do
+      it "returns true if the card is in a journey" do
+        expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
+      end
+
+      it "returns false if the card is not in a journey" do
+        card.touch_in(entry_station)
+        expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
+      end
     end
   end
 end
