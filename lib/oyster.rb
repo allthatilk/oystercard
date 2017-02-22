@@ -1,10 +1,11 @@
 class Oystercard
 
-attr_accessor :entry_station, :exit_station, :journeys
-MAX_LIMIT = 90
-MIN_LIMIT = 1
+  MAX_LIMIT = 90
+  MIN_LIMIT = 1
 
-  def initialize(balance = 0, entry_station = nil, exit_station = nil, journey = [])
+  attr_accessor :entry_station, :exit_station, :journeys
+
+  def initialize(balance = 0, entry_station = nil, exit_station = nil)
     @balance = balance
     @entry_station = entry_station
     @exit_station = exit_station

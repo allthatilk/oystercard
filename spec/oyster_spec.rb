@@ -1,11 +1,10 @@
 require 'oyster'
 
 describe Oystercard do
-  let(:entry_station) {double(:entry_station)}
-  let(:exit_station) {double(:exit_station)}
-  #let(:journey) {double(:journey => [])}
+  let(:entry_station) { double(:entry_station) }
+  let(:exit_station) { double(:exit_station) }
   let(:balance)  { 0 }
-  subject(:card) {described_class.new(balance)}
+  subject(:card) { described_class.new(balance) }
 
   describe "card balance" do
     context "balance state" do
@@ -83,21 +82,19 @@ describe Oystercard do
         card.touch_out(exit_station)
         expect(card.journeys).to include journey
       end
-
     end
   end
 
-    describe "journey state" do
-      let(:balance) { 5 }
+   describe "journey state" do
+    let(:balance) { 5 }
 
-      it "returns true if the card is in a journey" do
-        expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
-      end
-
-      it "returns false if the card is not in a journey" do
-        card.touch_in(entry_station)
-        expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
-      end
+    it "returns true if the card is in a journey" do
+      expect{ card.touch_in(entry_station) }.to change{ card.in_journey? }.to true
     end
 
+    it "returns false if the card is not in a journey" do
+      card.touch_in(entry_station)
+      expect{ card.touch_out(exit_station) }.to change{ card.in_journey? }.to false
+    end
+  end
 end
