@@ -6,7 +6,7 @@ describe Oystercard do
   let(:balance)  { 0 }
   subject(:card) { described_class.new(balance) }
 
-  describe "card balance" do
+  describe "Card balance" do
     context "balance state" do
       it "has a balance of zero" do
         expect(card.balance).to eq 0
@@ -74,7 +74,7 @@ describe Oystercard do
 
     context "recording journeys" do
       let(:journey) {{entry_station: entry_station, exit_station: exit_station}}
-      
+
         before(:each) do
           card.touch_in(entry_station)
         end
